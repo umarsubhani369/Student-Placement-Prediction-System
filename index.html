@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Placement Prediction</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100vh;
+            background: url('/static/ai.jpg') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            gap: 30px;
+            width: 90%;
+            max-width: 1100px;
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .left-box {
+            flex: 1;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .left-box h1 {
+            font-size: 2.8em;
+            line-height: 1.3;
+        }
+
+        .right-box {
+            flex: 2;
+            color: white;
+        }
+
+        form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px 30px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input {
+            padding: 10px;
+            margin-top: 5px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            width: 100%;
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        button {
+            padding: 12px;
+            background-color: #007BFF;
+            color: white;
+            font-size: 1em;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            grid-column: span 2;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .custom-dropdown {
+            position: relative;
+            user-select: none;
+        }
+
+        .dropdown-header {
+            padding: 10px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-top: 5px;
+        }
+
+        .dropdown-header:hover,
+        .dropdown-header:focus {
+            background: rgba(255, 255, 255, 0.3);
+            outline: none;
+        }
+
+        .dropdown-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            border-radius: 12px;
+            background: rgba(20, 20, 20, 0.7);
+            backdrop-filter: blur(25px) saturate(150%) contrast(1.2);
+            -webkit-backdrop-filter: blur(25px) saturate(150%) contrast(1.2);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+            display: none;
+            z-index: 100;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dropdown-list::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            z-index: -1;
+        }
+
+        .dropdown-option {
+            padding: 10px;
+            cursor: pointer;
+            color: white;
+            transition: background 0.2s ease;
+        }
+
+        .dropdown-option:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .custom-dropdown.open .dropdown-list {
+            display: block;
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+                overflow-y: auto;
+                height: 90vh;
+            }
+
+            .left-box {
+                border-right: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            }
+
+            form {
+                grid-template-columns: 1fr;
+            }
+
+            button {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="left-box">
+        <h1>Student Placement<br>Prediction System</h1>
+    </div>
+    <div class="right-box">
+        <form action="/predict" method="POST" onsubmit="return validateForm()">
+            <div>
+                <label for="cgpa">CGPA (out of 4):</label>
+                <input type="number" step="0.01" name="cgpa" min="0" max="4" required tabindex="1">
+            </div>
+            <div>
+                <label for="internships">Number of Internships:</label>
+                <input type="number" name="internships" min="0" required tabindex="2">
+            </div>
+            <div>
+                <label for="projects">Number of Projects:</label>
+                <input type="number" name="projects" min="0" required tabindex="3">
+            </div>
+            <div>
+                <label for="workshops">Workshops/Certifications:</label>
+                <input type="number" name="workshops" min="0" required tabindex="4">
+            </div>
+            <div>
+                <label for="aptitude">Aptitude Test Score:</label>
+                <input type="number" step="0.01" name="aptitude" min="0" max="100" required tabindex="5">
+            </div>
+            <div>
+                <label for="skill_test">Skill Test Score:</label>
+                <input type="number" step="0.01" name="skill_test" min="0" max="10" required tabindex="6">
+            </div>
+            <div class="custom-dropdown" data-name="extracurricular" tabindex="7">
+                <label>Extracurricular Activities:</label>
+                <div class="dropdown-header" tabindex="7">Select</div>
+                <div class="dropdown-list">
+                    <div class="dropdown-option" data-value="1">Yes</div>
+                    <div class="dropdown-option" data-value="0">No</div>
+                </div>
+                <input type="hidden" name="extracurricular" required>
+            </div>
+            <div class="custom-dropdown" data-name="training" tabindex="8">
+                <label>Placement Training Attended?</label>
+                <div class="dropdown-header" tabindex="8">Select</div>
+                <div class="dropdown-list">
+                    <div class="dropdown-option" data-value="1">Yes</div>
+                    <div class="dropdown-option" data-value="0">No</div>
+                </div>
+                <input type="hidden" name="training" required>
+            </div>
+            <div>
+                <label for="ssc">SSC Marks (%):</label>
+                <input type="number" step="0.01" name="ssc" min="0" max="100" required tabindex="9">
+            </div>
+            <div>
+                <label for="hsc">HSC Marks (%):</label>
+                <input type="number" step="0.01" name="hsc" min="0" max="100" required tabindex="10">
+            </div>
+            <button type="submit" tabindex="11">Predict Placement</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll('.custom-dropdown').forEach(dropdown => {
+        const header = dropdown.querySelector('.dropdown-header');
+        const list = dropdown.querySelector('.dropdown-list');
+        const options = dropdown.querySelectorAll('.dropdown-option');
+        const hiddenInput = dropdown.querySelector('input[type="hidden"]');
+
+        header.addEventListener('click', () => {
+            dropdown.classList.toggle('open');
+        });
+
+        options.forEach(option => {
+            option.addEventListener('click', () => {
+                header.textContent = option.textContent;
+                hiddenInput.value = option.getAttribute('data-value');
+                dropdown.classList.remove('open');
+
+                // Focus next tabindex element
+                const currentTab = parseInt(header.getAttribute('tabindex'));
+                const next = document.querySelector('[tabindex="' + (currentTab + 1) + '"]');
+                if (next) next.focus();
+            });
+        });
+
+        window.addEventListener('click', (e) => {
+            if (!dropdown.contains(e.target)) {
+                dropdown.classList.remove('open');
+            }
+        });
+    });
+
+    function validateForm() {
+        const inputs = document.querySelectorAll("input[type=number]");
+        for (let input of inputs) {
+            if (input.value < 0) {
+                alert("❌ Negative values are not allowed!");
+                return false;
+            }
+        }
+        const hiddenInputs = document.querySelectorAll("input[type=hidden]");
+        for (let hidden of hiddenInputs) {
+            if (!hidden.value) {
+                alert("❌ Please select all options!");
+                return false;
+            }
+        }
+        return true;
+    }
+</script>
+</body>
+</html>
