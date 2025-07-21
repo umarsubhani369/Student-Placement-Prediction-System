@@ -1,0 +1,17 @@
+Student-Placement-Prediction/
+│
+├── static/                     # CSS, JS, images
+│   └── image
+├── data/
+│   └── dataset
+│
+├── templates/                 # HTML templates
+│   ├── index.html             # Input form
+│   └── result.html            # Prediction result
+│
+├── model.py                     # ML model and preprocessing
+├── placement_model_tuned.pkl            # Trained Random Forest model
+|── Scalar.pkl                    # Scaler/encoder
+├── app.py                     # Flask app
+├── requirements.txt           # Python dependencies
+└── README.md                  # Project overview
